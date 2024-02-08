@@ -1,6 +1,17 @@
 from copy import deepcopy
+from surface import Surface
+from OpenGL.GL import *
+from OpenGL.raw.GLU import gluCylinder, gluDisk, gluQuadricTexture
 
 class Cube:
+
+    surfaces = [
+                                                              [[Surface('W') for _ in range(3)] for _ in range(3)],
+        [[Surface('G') for _ in range(3)] for _ in range(3)], [[Surface('R') for _ in range(3)] for _ in range(3)], [[Surface('B') for _ in range(3)] for _ in range(3)],
+                                                              [[Surface('Y') for _ in range(3)] for _ in range(3)],
+                                                              [[Surface('O') for _ in range(3)] for _ in range(3)],
+    ]
+
     #colors
     cube =[
                                                         [['W'for _ in range(3)]for _ in range(3)],
@@ -8,6 +19,14 @@ class Cube:
                                                         [['Y'for _ in range(3)]for _ in range(3)],
                                                         [['O'for _ in range(3)]for _ in range(3)]
            ]
+
+
+
+    def setCube(self, colors):
+        for surface in range(6):
+            for row in range(3):
+                for col in range(3):
+                    self.cube[surface][row][col] = colors[surface+row+col]
 
 
 
@@ -118,3 +137,16 @@ class Cube:
             self.swapFours((0,i,1),(2,i,1),(4,i,1),(5,i,1))
 
         self.rotateSurface(1, False)
+
+
+    #________________Graphic_______________
+
+
+    def draw(self, quadric):
+        for surface in range(6):
+            for row in range(3):
+                for col in range(3):
+                    self.surfaces[surface][row][col].draw(quadric)
+
+
+
