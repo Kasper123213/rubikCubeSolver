@@ -4,7 +4,7 @@ from OpenGL.GL import *
 from OpenGL.raw.GLU import gluCylinder, gluDisk, gluQuadricTexture
 
 class Cube:
-
+    # surfaces = []
     surfaces = [
                                                               [[Surface('W') for _ in range(3)] for _ in range(3)],
         [[Surface('G') for _ in range(3)] for _ in range(3)], [[Surface('R') for _ in range(3)] for _ in range(3)], [[Surface('B') for _ in range(3)] for _ in range(3)],
@@ -20,9 +20,26 @@ class Cube:
                                                         [['O'for _ in range(3)]for _ in range(3)]
            ]
 
+    # def setCube(self):
+    #     colorsMap = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
+    #     for surface in range(6):
+    #         row = []
+    #         for r in range(3):
+    #             col = []
+    #             for c in range(3):
+    #                 col.append(Surface(colorsMap.get(surface)))
+    #             row.append(col)
+    #         self.surfaces.append(row)
 
 
-    def setCube(self, colors):
+    def __init__(self):
+        # self.setCube()
+        self.loadParameters()
+        # self.surfaces[0][0][0].color = (0,0,0)
+        # self.surfaces[0][0][0].pos = [-1.5,0,0]
+        # self.surfaces[1][0][0].pos = [0,1.5,0]
+
+    def setSurface(self, colors):
         for surface in range(6):
             for row in range(3):
                 for col in range(3):
@@ -148,5 +165,18 @@ class Cube:
                 for col in range(3):
                     self.surfaces[surface][row][col].draw(quadric)
 
+
+    def loadParameters(self):
+        anglesMap = {0:(90, 1, 0, 0), 1:(90, 0, 1, 0), 2:(0, 0, 1, 0), 3:(90, 0, 1, 0), 4:(90, 1, 0, 0), 5:(0, 0, 1, 0),}
+        # self.surfaces[0][0][0].
+        # self.surfaces[0][0][0].setPos(0, 0, 0)
+        # self.surfaces[1][0][0].setPos(1, 0, 0)
+
+        for surface in range(6):
+            for row in range(3):
+                for col in range(3):
+                    self.surfaces[surface][row][col].setColor(self.cube[surface][row][col])
+                    self.surfaces[surface][row][col].angle = anglesMap.get(surface)
+                    self.surfaces[surface][row][col].setPos(surface, row, col)
 
 

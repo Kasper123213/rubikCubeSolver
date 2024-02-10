@@ -11,7 +11,7 @@ from surface import Surface
 
 
 def keyboard_key_callback(window, key, scancode, action, mods):
-    if (key == GLFW_KEY_ESCAPE or key == GLFW_KEY_Q) and action == GLFW_PRESS:
+    if (key == GLFW_KEY_ESCAPE or key == GLFW_KEY_P or key == GLFW_KEY_Q) and action == GLFW_PRESS:
         glfwSetWindowShouldClose(window, GLFW_TRUE)
 
 
@@ -23,6 +23,11 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         viewerMoveVector[1] = -1
     if key == GLFW_KEY_DOWN and action == GLFW_PRESS:
         viewerMoveVector[1] = 1
+
+    if key == GLFW_KEY_N and action == GLFW_PRESS:#todo usunąć
+        cube.moveB()        #todo cos ta kombinacja sie nisczy
+        cube.moveD()
+        cube.loadParameters()
 
 
     if (key == GLFW_KEY_RIGHT or key == GLFW_KEY_LEFT) and action == GLFW_RELEASE:
@@ -53,7 +58,7 @@ def update_viewport(window, width, height):
 
 
 def setup():
-    global window
+    global window, cube
 
     if not glfwInit():
         exit(-1)
@@ -71,6 +76,8 @@ def setup():
     update_viewport(None, display[0], display[1])
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glEnable(GL_DEPTH_TEST)
+
+    cube = Cube()
 
 
 
@@ -109,7 +116,7 @@ def render(time):
 
 
 
-    cube = Cube()
+
 
     cube.draw(gluNewQuadric())
     # surface = Surface('Y')
