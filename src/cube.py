@@ -1,6 +1,8 @@
+import time
 from copy import deepcopy
 from surface import Surface
 from OpenGL.GL import *
+from OpenGL.GLU import *
 from OpenGL.raw.GLU import gluCylinder, gluDisk, gluQuadricTexture
 
 class Cube:
@@ -20,6 +22,7 @@ class Cube:
                                                         [['O'for _ in range(3)]for _ in range(3)]
            ]
 
+    quadric = gluNewQuadric()
     # def setCube(self):
     #     colorsMap = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
     #     for surface in range(6):
@@ -93,77 +96,130 @@ class Cube:
 
 
     #####################_moves_#############################
-    #b moves
+    # #b moves
+    # def moveB(self):
+    #     for i in range(3):
+    #         self.swapFours((0,0,i),(1,2-i,0),(4,2,2-i),(3,i,2))
+    #
+    #     self.rotateSurface(5, True)
+    #
+    #
+    # def moveb(self):
+    #     for i in range(3):
+    #         self.swapFours((0,0,i),(1,2-i,0),(4,2,2-i),(3,i,2))
+    #         self.swapFours((0,1,i),(1,2-i,1),(4,1,2-i),(3,i,1))
+    #
+    #     self.rotateSurface(5, True)
+    #
+    #
+    # #f moves
+    #
+    # def moveF(self):
+    #     for i in range(3):
+    #         self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
+    #
+    #     self.rotateSurface(2, False)
+    #
+    # def movef(self):
+    #     for i in range(3):
+    #         self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
+    #         self.swapFours((0,1,i),(3,i,1),(4,1,2-i),(1,2-i,1))
+    #
+    #     self.rotateSurface(2, False)
+    #
+    # #d moves
+    #
+    # def moveD(self):
+    #     for i in range(3):
+    #         self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
+    #
+    #     self.rotateSurface(4, False)
+    #
+    # def moved(self):
+    #     for i in range(3):
+    #         self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
+    #         self.swapFours((2,1,i),(3,1,i),(5,1,2-i),(1,1,i))
+    #
+    #     self.rotateSurface(4, False)
+    #
+    #
+    # #l moves
+    #
+    # def moveL(self):
+    #     for i in range(3):
+    #         self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
+    #
+    #     self.rotateSurface(1, False)
+    #
+    # def movel(self):
+    #     for i in range(3):
+    #         self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
+    #         self.swapFours((0,i,1),(2,i,1),(4,i,1),(5,i,1))
+    #
+    #     self.rotateSurface(1, False)
+
+    #rotate around white center
+    def moveW(self):
+        for i in range(3):
+            self.swapFours((5,2,i),(3,0,i),(2,0,2-i),(1,0,2-i))
+        self.rotateSurface(0, False)
+
+
+    #rotate around green center
+    def moveG(self):
+        for i in range(3):
+            self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
+        self.rotateSurface(1, False)
+
+
+    #rotate around red center
+    def moveR(self):
+        for i in range(3):
+            self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
+        self.rotateSurface(2, False)
+
+
+    # rotate around blue center
     def moveB(self):
         for i in range(3):
-            self.swapFours((0,0,i),(1,2-i,0),(4,2,2-i),(3,i,2))
+            self.swapFours((0,2-i,2),(5,2-i,2),(4,2-i,2),(2,2-i,2))
+        self.rotateSurface(3, False)
 
-        self.rotateSurface(5, True)
+    # rotate around yellow center
+    def moveY(self):
+        for i in range(3):
+            self.swapFours((2,2,i),(3,2,i),(5,i,2),(1,2,i))
 
+        self.rotateSurface(4, False)
 
-    def moveb(self):
+    # rotate around orange center
+    def moveO(self):
         for i in range(3):
             self.swapFours((0,0,i),(1,2-i,0),(4,2,2-i),(3,i,2))
-            self.swapFours((0,1,i),(1,2-i,1),(4,1,2-i),(3,i,1))
 
-        self.rotateSurface(5, True)
+        self.rotateSurface(5, False)
 
 
-    #f moves
 
-    def moveF(self):
-        for i in range(3):
-            self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
+    #rotate around yellow center
 
-        self.rotateSurface(2, False)
-
-    def movef(self):
-        for i in range(3):
-            self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
-            self.swapFours((0,1,i),(3,i,1),(4,1,2-i),(1,2-i,1))
-
-        self.rotateSurface(2, False)
-
-    #d moves
-
-    def moveD(self):
+    def moveY(self):
         for i in range(3):
             self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
 
         self.rotateSurface(4, False)
 
-    def moved(self):
-        for i in range(3):
-            self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
-            self.swapFours((2,1,i),(3,1,i),(5,1,2-i),(1,1,i))
 
-        self.rotateSurface(4, False)
-
-
-    #l moves
-
-    def moveL(self):
-        for i in range(3):
-            self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
-
-        self.rotateSurface(1, False)
-
-    def movel(self):
-        for i in range(3):
-            self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
-            self.swapFours((0,i,1),(2,i,1),(4,i,1),(5,i,1))
-
-        self.rotateSurface(1, False)
 
 
     #________________Graphic_______________
 
 
-    def draw(self, quadric):
+    def draw(self):
         for surface in range(6):
             for row in range(3):
                 for col in range(3):
-                    self.surfaces[surface][row][col].draw(quadric)
+                    self.surfaces[surface][row][col].draw(self.quadric)
 
 
     def loadParameters(self):
@@ -178,5 +234,3 @@ class Cube:
                     self.surfaces[surface][row][col].setColor(self.cube[surface][row][col])
                     self.surfaces[surface][row][col].angle = anglesMap.get(surface)
                     self.surfaces[surface][row][col].setPos(surface, row, col)
-
-

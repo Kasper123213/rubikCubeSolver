@@ -44,6 +44,7 @@ class Surface:
             self.pos[2] = -3
         elif surface == 3:
             self.setZ(col)
+            self.pos[2] *= -1
             self.setY(row)
             self.pos[0] = 3
         elif surface == 4:

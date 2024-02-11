@@ -1,3 +1,4 @@
+import time
 from math import pi, sin, cos
 from PIL import Image
 from glfw.GLFW import *
@@ -24,9 +25,23 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if key == GLFW_KEY_DOWN and action == GLFW_PRESS:
         viewerMoveVector[1] = 1
 
-    if key == GLFW_KEY_N and action == GLFW_PRESS:#todo usunąć
-        cube.moveB()        #todo cos ta kombinacja sie nisczy
-        cube.moveD()
+    if key == GLFW_KEY_W and action == GLFW_PRESS:#todo usunąć
+        cube.moveW()
+        cube.loadParameters()
+    if key == GLFW_KEY_G and action == GLFW_PRESS:#todo usunąć
+        cube.moveG()
+        cube.loadParameters()
+    if key == GLFW_KEY_R and action == GLFW_PRESS:#todo usunąć
+        cube.moveR()
+        cube.loadParameters()
+    if key == GLFW_KEY_B and action == GLFW_PRESS:#todo usunąć
+        cube.moveB()
+        cube.loadParameters()
+    if key == GLFW_KEY_Y and action == GLFW_PRESS:#todo usunąć
+        cube.moveY()
+        cube.loadParameters()
+    if key == GLFW_KEY_O and action == GLFW_PRESS:#todo usunąć
+        cube.moveO()
         cube.loadParameters()
 
 
@@ -118,7 +133,8 @@ def render(time):
 
 
 
-    cube.draw(gluNewQuadric())
+    # cube.draw(gluNewQuadric())
+    cube.draw()
     # surface = Surface('Y')
     # surface.draw(quadric)
     #
@@ -153,6 +169,8 @@ def render(time):
 
 def main():
     setup()
+
+
 
     while not glfwWindowShouldClose(window):
         render(glfwGetTime())
