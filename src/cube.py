@@ -6,13 +6,6 @@ from OpenGL.GLU import *
 from OpenGL.raw.GLU import gluCylinder, gluDisk, gluQuadricTexture
 
 class Cube:
-    # surfaces = []
-    surfaces = [
-                                                              [[Surface('W') for _ in range(3)] for _ in range(3)],
-        [[Surface('G') for _ in range(3)] for _ in range(3)], [[Surface('R') for _ in range(3)] for _ in range(3)], [[Surface('B') for _ in range(3)] for _ in range(3)],
-                                                              [[Surface('Y') for _ in range(3)] for _ in range(3)],
-                                                              [[Surface('O') for _ in range(3)] for _ in range(3)],
-    ]
 
     #colors
     cube =[
@@ -35,13 +28,16 @@ class Cube:
     #         self.surfaces.append(row)
 
 
-    def __init__(self):
-        # self.setCube()
-        self.loadParameters()
-        # self.surfaces[0][0][0].color = (0,0,0)
-        # self.surfaces[0][0][0].pos = [-1.5,0,0]
-        # self.surfaces[1][0][0].pos = [0,1.5,0]
 
+
+    def createSurfaces(self):
+        self.surfaces = [
+            [[Surface('W') for _ in range(3)] for _ in range(3)],
+            [[Surface('G') for _ in range(3)] for _ in range(3)], [[Surface('R') for _ in range(3)] for _ in range(3)],
+            [[Surface('B') for _ in range(3)] for _ in range(3)],
+            [[Surface('Y') for _ in range(3)] for _ in range(3)],
+            [[Surface('O') for _ in range(3)] for _ in range(3)],
+        ]
     def setSurface(self, colors):
         for surface in range(6):
             for row in range(3):
@@ -185,12 +181,13 @@ class Cube:
             self.swapFours((0,2-i,2),(5,2-i,2),(4,2-i,2),(2,2-i,2))
         self.rotateSurface(3, False)
 
-    # rotate around yellow center
+
+    #rotate around yellow center
     def moveY(self):
         for i in range(3):
-            self.swapFours((2,2,i),(3,2,i),(5,i,2),(1,2,i))
-
+            self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
         self.rotateSurface(4, False)
+
 
     # rotate around orange center
     def moveO(self):
@@ -201,14 +198,31 @@ class Cube:
 
 
 
-    #rotate around yellow center
 
-    def moveY(self):
+
+    def fullRotateY(self):
+        surface = deepcopy(self.cube[1])
+        self.cube[1] = deepcopy(self.cube[2])
+        self.cube[2] = deepcopy(self.cube[3])
+
         for i in range(3):
-            self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
+            self.cube[3][i] = deepcopy(self.cube[5][2-i][::-1])
 
-        self.rotateSurface(4, False)
+        for i in range(3):
+            self.cube[5][i] = surface[2-i][::-1]
 
+        self.rotateSurface(0, False)
+        self.rotateSurface(4, True)
+
+    def fullRotateX(self):
+        surface = deepcopy(self.cube[0])
+        self.cube[0] = deepcopy(self.cube[2])
+        self.cube[2] = deepcopy(self.cube[4])
+        self.cube[4] = deepcopy(self.cube[5])
+        self.cube[5] = surface
+
+        self.rotateSurface(1, True)
+        self.rotateSurface(3, False)
 
 
 

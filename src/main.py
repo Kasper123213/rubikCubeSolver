@@ -7,6 +7,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from cube import Cube
+from src.solver import Solver
 
 from surface import Surface
 
@@ -42,6 +43,12 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         cube.loadParameters()
     if key == GLFW_KEY_O and action == GLFW_PRESS:#todo usunąć
         cube.moveO()
+        cube.loadParameters()
+    if key == GLFW_KEY_X and action == GLFW_PRESS:#todo usunąć
+        cube.fullRotateX()
+        cube.loadParameters()
+    if key == GLFW_KEY_Z and action == GLFW_PRESS:#todo usunąć
+        cube.fullRotateY()
         cube.loadParameters()
 
 
@@ -93,6 +100,9 @@ def setup():
     glEnable(GL_DEPTH_TEST)
 
     cube = Cube()
+
+    cube.createSurfaces()
+    cube.loadParameters()
 
 
 
@@ -168,9 +178,12 @@ def render(time):
 
 
 def main():
+    cube = Cube()
+    solver = Solver(cube)
+
+    return
+
     setup()
-
-
 
     while not glfwWindowShouldClose(window):
         render(glfwGetTime())
