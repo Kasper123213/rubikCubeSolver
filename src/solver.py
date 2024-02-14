@@ -18,8 +18,21 @@ class Solver:
 
     #algorithm parameters
     searchingTime =  10000#seconds
+
     mutationPoss = 0.7
-    crossingPoss = 0.0
+
+    addMutationPoss = 0.55
+    deleteMutationPoss = 0.45
+    # if r > addMutationPoss:
+    #     newChromosom = self.addMutauion(chromosom)
+    # elif r > deleteMutationPoss:
+    #     newChromosom = self.deleteMutation(chromosom)
+    # else:
+    #     newChromosom = self.changeMutation(chromosom)
+
+
+
+    crossingPoss = 0.3
     populationSize = 50
     tournamentSize = int(populationSize * 0.2)
     numberOfParents = int(populationSize * 0.3)
@@ -27,6 +40,8 @@ class Solver:
     bestSolution = []
     bestValue = 0#sys.maxsize
 
+    repeats = 0
+    allowedRepeats = populationSize*0.5
     def __init__(self, cube):
         self.beginCube = Cube()
         self.beginCube.cube = deepcopy(cube.cube)
@@ -44,16 +59,16 @@ class Solver:
     def solve(self):
         startTime = int(time.time())
 
-        population = self.setPopulation()
-        while int(time.time()) - startTime < self.searchingTime:
-            self.findBest(population)
 
+        population = self.setPopulation()
+        while int(time.time()) - startTime < self.searchingTime and self.bestValue < 108:
+            self.findBest(population)
+            print(self.bestValue)
             parents = self.findParents(population)
 
             children = []
             for i in range(0,len(parents), 2):
-                if True:
-                    # if self.crossingPoss > random.random():
+                if self.crossingPoss > random.random():
                     child1, child2 = self.cross(parents[i], parents[i+1])
                     children.append(child1)
                     children.append(child2)
@@ -66,13 +81,19 @@ class Solver:
 
 
 
+
+        print("Time of solving = ", time.time() - startTime)
         return self.bestSolution
 
-    def setPopulation(self):
+    def setPopulation(self, size=1):
         population = []
         chromosom = []
         for i in range(self.populationSize):
-            population.append([random.choice(self.moves)])
+
+            for ii in range(size):
+                chromosom.append(random.choice(self.moves))
+            population.append(deepcopy(chromosom))
+            chromosom.clear()
 
         return population
 
@@ -85,16 +106,21 @@ class Solver:
             population.append(bestChromosom)
             oldPopulation.remove(bestChromosom)
 
+
         bestValue = self.fitness(population[0])
         if bestValue > self.bestValue:
             self.bestValue = bestValue
             self.bestSolution = population[0]
             print("**")
-            print("Walju=",bestValue)
+            print("Walju=",self.bestValue)
             # print("Walju=",int(bestValue * len(self.bestSolution)))
             print(self.bestSolution)
             print("**")
+        else:
+            self.repeats+=1
 
+        if population[0] == population[-1] or self.allowedRepeats <= self.repeats:
+            population = self.setPopulation(int(len(population[0])//(random.random()*5)))
 
 
 
@@ -120,13 +146,12 @@ class Solver:
     def mutate(self, chromosom):
         r = random.random()
 
-        if r>0.4:
+        if r>self.addMutationPoss:
             newChromosom = self.addMutauion(chromosom)
-        elif r>0.3:
+        elif r>self.deleteMutationPoss:
             newChromosom = self.deleteMutation(chromosom)
         else:
             newChromosom = self.changeMutation(chromosom)
-
 
         return newChromosom
 
@@ -136,7 +161,14 @@ class Solver:
         # move = random.choice(self.moves)
         # chromosom.insert(index, move)
         move = random.choice(self.moves)
+        if len(chromosom) >=3:
+            if chromosom[-4:] == [move] * 4:
+                return [random.choice(self.moves)]
+            elif chromosom[-3:] == [move] * 3:
+                return self.addMutauion(chromosom)
+
         chromosom.append(move)
+
         return chromosom
 
     def deleteMutation(self, chromosom):
@@ -146,9 +178,10 @@ class Solver:
         return chromosom
 
     def changeMutation(self, chromosom):
-        index = int(random.random() * len(chromosom))
-        move = random.choice(self.moves)
-        chromosom[index] = move
+        index1 = int(random.random() * (len(chromosom)-1)+1)
+        index2 = int(random.random() * index1)
+        for i in range(index2, index1):
+            chromosom[i] = random.choice(self.moves)
         return chromosom
 
     # def fitness(self, chromosom):
@@ -201,3 +234,5 @@ class Solver:
         # score -= 0.001*len(chromosom)
 
         return score
+
+

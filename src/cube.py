@@ -159,7 +159,7 @@ class Cube:
     #rotate around white center
     def moveW(self):
         for i in range(3):
-            self.swapFours((5,2,i),(3,0,i),(2,0,2-i),(1,0,2-i))
+            self.swapFours((5,2,i),(3,0,2-i),(2,0,2-i),(1,0,2-i))
         self.rotateSurface(0, False)
 
 
