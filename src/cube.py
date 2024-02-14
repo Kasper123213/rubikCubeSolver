@@ -39,10 +39,12 @@ class Cube:
             [[Surface('O') for _ in range(3)] for _ in range(3)],
         ]
     def setSurface(self, colors):
+        index = 0
         for surface in range(6):
             for row in range(3):
                 for col in range(3):
-                    self.cube[surface][row][col] = colors[surface+row+col]
+                    self.cube[surface][row][col] = colors[index]
+                    index += 1
 
 
 
@@ -248,3 +250,25 @@ class Cube:
                     self.surfaces[surface][row][col].setColor(self.cube[surface][row][col])
                     self.surfaces[surface][row][col].angle = anglesMap.get(surface)
                     self.surfaces[surface][row][col].setPos(surface, row, col)
+
+
+    def saveCube(self, filename = "example.txt"):
+        with open(filename, "w") as file:
+            text = ""
+            for s in range(6):
+                for r in range(3):
+                    for c in range(3):
+                        text += self.cube[s][r][c]
+                        text += "\n"
+
+
+
+            file.write(text)
+
+    def readFromFile(self, filename = "example.txt"):
+        surfaces = []
+        with open(filename, "r") as file:
+            for line in file:
+                surfaces.append(line.strip())
+
+        self.setSurface(surfaces)

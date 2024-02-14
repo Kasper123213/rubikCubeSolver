@@ -50,6 +50,8 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if key == GLFW_KEY_Z and action == GLFW_PRESS:#todo usunąć
         cube.fullRotateY()
         cube.loadParameters()
+    if key == GLFW_KEY_S and action == GLFW_PRESS:#todo usunąć
+        cube.saveCube("example.txt")
 
 
     if (key == GLFW_KEY_RIGHT or key == GLFW_KEY_LEFT) and action == GLFW_RELEASE:
@@ -179,9 +181,8 @@ def render(time):
 
 def main():
     cube = Cube()
-    solver = Solver(cube)
+    cube.readFromFile()
 
-    return
 
     setup()
 
@@ -195,7 +196,25 @@ def main():
 
 
 
+def main2():
+    cube = Cube()
+    cube.readFromFile()
+    solver = Solver(cube)
+    solution = solver.solve()
 
+
+    cube.printCube()
+
+    for move in solution:
+        print(move.__name__, end = ' ')
+    print()
+
+    for move in solution:
+        move(cube)
+    cube.printCube()
+
+    # cube.moveY()
+    # cube.printCube()
 
 
 
@@ -210,4 +229,5 @@ viewerSpeed = pi / 180 * 0.5
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    main2()
