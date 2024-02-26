@@ -9,11 +9,11 @@ class Cube:
 
     #colors
     cube =[
-                                                        [['W'for _ in range(3)]for _ in range(3)],
-           [['G'for _ in range(3)]for _ in range(3)],   [['R'for _ in range(3)]for _ in range(3)],    [['B'for _ in range(3)]for _ in range(3)],
-                                                        [['Y'for _ in range(3)]for _ in range(3)],
-                                                        [['O'for _ in range(3)]for _ in range(3)]
-           ]
+        [['W'for _ in range(3)]for _ in range(3)],
+        [['G'for _ in range(3)]for _ in range(3)],   [['R'for _ in range(3)]for _ in range(3)],    [['B'for _ in range(3)]for _ in range(3)],
+        [['Y'for _ in range(3)]for _ in range(3)],
+        [['O'for _ in range(3)]for _ in range(3)]
+    ]
 
     quadric = gluNewQuadric()
     # def setCube(self):
@@ -38,7 +38,7 @@ class Cube:
             [[Surface('Y') for _ in range(3)] for _ in range(3)],
             [[Surface('O') for _ in range(3)] for _ in range(3)],
         ]
-    def setSurface(self, colors):
+    def setSurfaces(self, colors):
         index = 0
         for surface in range(6):
             for row in range(3):
@@ -161,13 +161,26 @@ class Cube:
         for i in range(3):
             self.swapFours((5,2,i),(3,0,2-i),(2,0,2-i),(1,0,2-i))
         self.rotateSurface(0, False)
-
+    # def moveW2(self):
+    #     self.moveW()
+    #     self.moveW()
+    # def moveW3(self):
+    #     self.moveW()
+    #     self.moveW()
+    #     self.moveW()
 
     #rotate around green center
     def moveG(self):
         for i in range(3):
             self.swapFours((0,i,0),(2,i,0),(4,i,0),(5,i,0))
         self.rotateSurface(1, False)
+    # def moveG2(self):
+    #     self.moveG()
+    #     self.moveG()
+    # def moveG3(self):
+    #     self.moveG()
+    #     self.moveG()
+    #     self.moveG()
 
 
     #rotate around red center
@@ -175,6 +188,13 @@ class Cube:
         for i in range(3):
             self.swapFours((0,2,i),(3,i,0),(4,0,2-i),(1,2-i,2))
         self.rotateSurface(2, False)
+    # def moveR2(self):
+    #     self.moveR()
+    #     self.moveR()
+    # def moveR3(self):
+    #     self.moveR()
+    #     self.moveR()
+    #     self.moveR()
 
 
     # rotate around blue center
@@ -182,6 +202,13 @@ class Cube:
         for i in range(3):
             self.swapFours((0,2-i,2),(5,2-i,2),(4,2-i,2),(2,2-i,2))
         self.rotateSurface(3, False)
+    # def moveB2(self):
+    #     self.moveB()
+    #     self.moveB()
+    # def moveB3(self):
+    #     self.moveB()
+    #     self.moveB()
+    #     self.moveB()
 
 
     #rotate around yellow center
@@ -189,6 +216,13 @@ class Cube:
         for i in range(3):
             self.swapFours((2,2,i),(3,2,i),(5,0,2-i),(1,2,i))
         self.rotateSurface(4, False)
+    # def moveY2(self):
+    #     self.moveY()
+    #     self.moveY()
+    # def moveY3(self):
+    #     self.moveY()
+    #     self.moveY()
+    #     self.moveY()
 
 
     # rotate around orange center
@@ -197,6 +231,13 @@ class Cube:
             self.swapFours((0,0,i),(1,2-i,0),(4,2,2-i),(3,i,2))
 
         self.rotateSurface(5, False)
+    # def moveO2(self):
+    #     self.moveO()
+    #     self.moveO()
+    # def moveO3(self):
+    #     self.moveO()
+    #     self.moveO()
+    #     self.moveO()
 
 
 
@@ -271,4 +312,41 @@ class Cube:
             for line in file:
                 surfaces.append(line.strip())
 
-        self.setSurface(surfaces)
+        self.setSurfaces(surfaces)
+
+
+    def getSurfaces(self):
+        notations = {
+            'G': 'F',
+            'W': 'U',
+            'B': 'B',
+            'R': 'R',
+            'O': 'L',
+            'Y': 'D'
+        }
+
+        # ['white', 'red', 'green', 'yellow', 'orange', 'blue']:
+        state = ""
+        for surface in (0, 2, 1, 4, 5, 3):
+            for row in range(3):
+                for col in range(3):
+                    if surface == 4:
+                        state += notations.get(self.cube[surface][2-col][row])
+                    elif surface == 5:
+                        state += notations.get(self.cube[surface][2-row][2-col])
+                    elif surface == 0:
+                        state += notations.get(self.cube[surface][col][2-row])
+                    else:
+                        state += notations.get(self.cube[surface][row][col])
+        return state
+
+    # def isSoled(self):
+    #     colors = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
+    #
+    #     for surface in range(6):
+    #         for row in range(3):
+    #             for col in range(3):
+    #                 if self.cube[surface][row][col] != colors.get(surface):
+    #                     return False
+    #     return True
+

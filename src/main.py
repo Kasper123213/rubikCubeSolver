@@ -7,7 +7,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from cube import Cube
-from src.solver import Solver
+import kociemba
 
 from surface import Surface
 
@@ -52,12 +52,22 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         cube.loadParameters()
     if key == GLFW_KEY_S and action == GLFW_PRESS:#todo usunąć
         cube.saveCube("example.txt")
+    if key == GLFW_KEY_ENTER and action == GLFW_PRESS:#todo usunąć
+        findSolution()
 
 
     if (key == GLFW_KEY_RIGHT or key == GLFW_KEY_LEFT) and action == GLFW_RELEASE:
         viewerMoveVector[0] = 0
     if (key == GLFW_KEY_UP or key == GLFW_KEY_DOWN) and action == GLFW_RELEASE:
         viewerMoveVector[1] = 0
+
+def findSolution():
+    state = cube.getSurfaces()
+    print(state)
+    solution = kociemba.solve(state)
+    print(solution)
+
+
 
 
 def update_viewport(window, width, height):
@@ -180,7 +190,6 @@ def render(time):
 
 
 def main():
-    cube = Cube()
     cube.readFromFile()
 
 
@@ -196,25 +205,7 @@ def main():
 
 
 
-def main2():
-    cube = Cube()
-    cube.readFromFile()
-    solver = Solver(cube)
-    solution = solver.solve()
 
-
-    cube.printCube()
-
-    for move in solution:
-        print(move.__name__, end = ' ')
-    print()
-
-    for move in solution:
-        move(cube)
-    cube.printCube()
-
-    # cube.moveY()
-    # cube.printCube()
 
 
 
@@ -226,8 +217,10 @@ viewer = [0.0, 0.0, 3.0]
 viewerMoveVector = [0, 0, 1]  # x, y, zoom
 viewerSpeed = pi / 180 * 0.5
 
+cube = Cube()
+solution = []
 
 
 if __name__ == "__main__":
-    # main()
-    main2()
+    main()
+    # main2()
