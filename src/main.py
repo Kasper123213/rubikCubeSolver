@@ -1,4 +1,4 @@
-import time
+import time as Time
 from math import pi, sin, cos
 from PIL import Image
 from glfw.GLFW import *
@@ -52,11 +52,14 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         cube.loadParameters()
     if key == GLFW_KEY_S and action == GLFW_PRESS:#todo usunąć
         cube.saveCube("example.txt")
+    if key == GLFW_KEY_L and action == GLFW_PRESS:#todo usunąć
+        cube.readFromFile("example.txt")
     if key == GLFW_KEY_ENTER and action == GLFW_PRESS:#todo usunąć
         findSolution()
+        
     if key == GLFW_KEY_SPACE and action == GLFW_PRESS:#todo usunąć
-        global solvingMoveIndex, translatedSolution
-        if len(translatedSolution) != 0:
+        global solvingMoveIndex, translatedSolution, showingSolution, startRotationTime
+        if len(translatedSolution) != 0 :
 
             if solvingMoveIndex >= len(translatedSolution):
                 solvingMoveIndex = 0
@@ -65,6 +68,10 @@ def keyboard_key_callback(window, key, scancode, action, mods):
                 translatedSolution[solvingMoveIndex](cube)
                 cube.loadParameters()
                 solvingMoveIndex += 1
+                showingSolution = True
+                startRotationTime = glfwGetTime()
+
+
 
 
 
@@ -76,7 +83,7 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         viewerMoveVector[1] = 0
 
 def findSolution(): #todo do sth with it
-    global translatedSolution
+    global translatedSolution, showingSolution, startRotationTime
 
     if cube.isSolved():
         print("solved")
@@ -117,6 +124,9 @@ def findSolution(): #todo do sth with it
     for move in solution:
         move = translator.get(move)
         translatedSolution += move
+
+    showingSolution = True
+
 
     # for move in translatedSolution:
     #     move(cube)
@@ -201,7 +211,8 @@ def calcPose(object, angles):
 
 
 
-def render():
+def render(time):
+    global startRotationTime, showingSolution
     # time = glfwGetTime()
     # print(time)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -215,19 +226,16 @@ def render():
 
 
 
-
-    # cube.draw(gluNewQuadric())
-    cube.draw()
-    # surface = Surface('Y')
-    # surface.draw(quadric)
-    #
-    # surface = Surface('O')
-    # surface.draw(quadric)
-
-    # # Przód
-    # glColor3f(1, 1, 0.0)  # Czerwony
-    # glTranslatef(0, 0, 0.5)
-    # gluDisk(quadric, 0, 0.5, 4, 32)
+    if startRotationTime != -1 and showingSolution:
+        deltaTime = time - startRotationTime
+        angle = 90 - (90 * deltaTime / rotationTime)
+        cube.draw(angle)
+        Time.sleep(0.1)
+        if deltaTime >= rotationTime:
+            startRotationTime = -1
+            showingSolution = False
+    else:
+        cube.draw()
 
 
 
@@ -246,20 +254,21 @@ def render():
             viewerAngles[1] = 1.49
         calcPose(viewer, viewerAngles)
 
-    glfwSwapBuffers(window)
-    glfwPollEvents()
+
 
 
 
 
 def main():
-    cube.readFromFile()
+    # cube.readFromFile()
 
 
     setup()
 
     while not glfwWindowShouldClose(window):
-        render()
+        render(glfwGetTime())
+        glfwSwapBuffers(window)
+        glfwPollEvents()
 
 
 
@@ -285,6 +294,9 @@ solution = [] #todo delete
 solvingMoveIndex = 0
 translatedSolution = []
 
+showingSolution = False
+startRotationTime = -1
+rotationTime = 1
 
 if __name__ == "__main__":
     main()

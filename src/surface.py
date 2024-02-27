@@ -9,9 +9,10 @@ class Surface:
     def __init__(self, colorName):
         self.setColor(colorName)
 
-    def draw(self, quadric):
+    def draw(self, quadric, rotation = (0, 0, 0, 1)):
         glColor3f(*self.color)
 
+        glRotatef(*rotation)
         glTranslatef(*self.pos)
         glRotatef(*self.angle)
         glRotatef(45, 0, 0, 1)
@@ -21,6 +22,7 @@ class Surface:
         glRotatef(45, 0, 0, -1)
         glRotatef(-self.angle[0], self.angle[1], self.angle[2], self.angle[3])
         glTranslatef(-self.pos[0], -self.pos[1], -self.pos[2])
+        glRotatef(-rotation[0], rotation[1], rotation[2], rotation[3])
 
     def setColor(self, colorName):
         self.colorName = colorName
