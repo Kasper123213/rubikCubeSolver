@@ -54,6 +54,20 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         cube.saveCube("example.txt")
     if key == GLFW_KEY_ENTER and action == GLFW_PRESS:#todo usunąć
         findSolution()
+    if key == GLFW_KEY_SPACE and action == GLFW_PRESS:#todo usunąć
+        global solvingMoveIndex, translatedSolution
+        if len(translatedSolution) != 0:
+
+            if solvingMoveIndex >= len(translatedSolution):
+                solvingMoveIndex = 0
+                translatedSolution = []
+            else:
+                translatedSolution[solvingMoveIndex](cube)
+                cube.loadParameters()
+                solvingMoveIndex += 1
+
+
+
 
 
     if (key == GLFW_KEY_RIGHT or key == GLFW_KEY_LEFT) and action == GLFW_RELEASE:
@@ -62,6 +76,8 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         viewerMoveVector[1] = 0
 
 def findSolution(): #todo do sth with it
+    global translatedSolution
+
     if cube.isSolved():
         print("solved")
         return
@@ -97,18 +113,20 @@ def findSolution(): #todo do sth with it
     solution = kociemba.solve(state)
     solution = solution.split()
 
-    translatedSolution = []
+
     for move in solution:
         move = translator.get(move)
         translatedSolution += move
 
-    for move in translatedSolution:
-        move(cube)
-        cube.loadParameters()
-        render()
-        time.sleep(1)
+    # for move in translatedSolution:
+    #     move(cube)
+    #     cube.loadParameters()
+    #     render()
+    #     # time.sleep(1)
 
-    print(translatedSolution)
+
+
+    # print(translatedSolution)
 
 
 def update_viewport(window, width, height):
@@ -184,6 +202,8 @@ def calcPose(object, angles):
 
 
 def render():
+    # time = glfwGetTime()
+    # print(time)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
@@ -260,7 +280,10 @@ viewerMoveVector = [0, 0, 1]  # x, y, zoom
 viewerSpeed = pi / 180 * 0.5
 
 cube = Cube()
-solution = []
+solution = [] #todo delete
+
+solvingMoveIndex = 0
+translatedSolution = []
 
 
 if __name__ == "__main__":
