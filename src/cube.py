@@ -340,13 +340,13 @@ class Cube:
                         state += notations.get(self.cube[surface][row][col])
         return state
 
-    # def isSoled(self):
-    #     colors = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
-    #
-    #     for surface in range(6):
-    #         for row in range(3):
-    #             for col in range(3):
-    #                 if self.cube[surface][row][col] != colors.get(surface):
-    #                     return False
-    #     return True
+    def isSolved(self):
+        colors = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
+
+        for surface in range(6):
+            for row in range(3):
+                for col in range(3):
+                    if self.cube[surface][row][col] != colors.get(surface):
+                        return False
+        return True
 

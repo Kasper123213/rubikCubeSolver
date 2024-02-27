@@ -61,13 +61,54 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if (key == GLFW_KEY_UP or key == GLFW_KEY_DOWN) and action == GLFW_RELEASE:
         viewerMoveVector[1] = 0
 
-def findSolution():
+def findSolution(): #todo do sth with it
+    if cube.isSolved():
+        print("solved")
+        return
+
+    translator = {
+        "U" : [Cube.moveW],
+        "U'": [Cube.moveW, Cube.moveW, Cube.moveW],
+        "U2": [Cube.moveW, Cube.moveW],
+
+        "D" : [Cube.moveY],
+        "D'": [Cube.moveY, Cube.moveY, Cube.moveY],
+        "D2": [Cube.moveY, Cube.moveY],
+
+        "L" : [Cube.moveO],
+        "L'": [Cube.moveO, Cube.moveO, Cube.moveO],
+        "L2": [Cube.moveO, Cube.moveO],
+
+        "R" : [Cube.moveR],
+        "R'": [Cube.moveR, Cube.moveR, Cube.moveR],
+        "R2": [Cube.moveR, Cube.moveR],
+
+        "F" : [Cube.moveG],
+        "F'": [Cube.moveG, Cube.moveG, Cube.moveG],
+        "F2": [Cube.moveG, Cube.moveG],
+
+        "B" : [Cube.moveB],
+        "B'": [Cube.moveB, Cube.moveB, Cube.moveB],
+        "B2": [Cube.moveB, Cube.moveB]
+    }
+
     state = cube.getSurfaces()
-    print(state)
+
     solution = kociemba.solve(state)
-    print(solution)
+    solution = solution.split()
 
+    translatedSolution = []
+    for move in solution:
+        move = translator.get(move)
+        translatedSolution += move
 
+    for move in translatedSolution:
+        move(cube)
+        cube.loadParameters()
+        render()
+        time.sleep(1)
+
+    print(translatedSolution)
 
 
 def update_viewport(window, width, height):
@@ -142,7 +183,7 @@ def calcPose(object, angles):
 
 
 
-def render(time):
+def render():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
@@ -185,6 +226,8 @@ def render(time):
             viewerAngles[1] = 1.49
         calcPose(viewer, viewerAngles)
 
+    glfwSwapBuffers(window)
+    glfwPollEvents()
 
 
 
@@ -196,9 +239,8 @@ def main():
     setup()
 
     while not glfwWindowShouldClose(window):
-        render(glfwGetTime())
-        glfwSwapBuffers(window)
-        glfwPollEvents()
+        render()
+
 
 
     glfwTerminate()
