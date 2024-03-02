@@ -218,7 +218,7 @@ class Cube:
                     self.surfaces[surface][row][col].setPos(surface, row, col)
 
 
-    def saveCube(self, filename = "example.txt"):
+    def saveCube(self, filename = "./example.txt"):
         with open(filename, "w") as file:
             text = ""
             for s in range(6):
