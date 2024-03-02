@@ -26,7 +26,7 @@ class Surface:
 
     def setColor(self, colorName):
         self.colorName = colorName
-        color_map = {'W': (1, 1, 1), 'G': (0, 1, 0), 'R': (1, 0, 0), 'B': (0, 0, 1), 'Y': (1, 1, 0), 'O': (1, .5, 0)}
+        color_map = {'W': (1, 1, 1), 'G': (0, 1, 0), 'R': (1, 0, 0), 'B': (0, 0, 1), 'Y': (1, 1, 0), 'O': (1, .5, 0), 'X':(0,0,0), 'S':(0.3,0.3,0.3)}
         self.color = color_map.get(colorName, (0, 0, 0))
 
     def setPos(self, surface, row, col):

@@ -13,6 +13,8 @@ from surface import Surface
 
 
 def keyboard_key_callback(window, key, scancode, action, mods):
+    global settingManual
+
     if (key == GLFW_KEY_ESCAPE or key == GLFW_KEY_P or key == GLFW_KEY_Q) and action == GLFW_PRESS:
         glfwSetWindowShouldClose(window, GLFW_TRUE)
 
@@ -26,38 +28,90 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if key == GLFW_KEY_DOWN and action == GLFW_PRESS:
         viewerMoveVector[1] = 1
 
-    if key == GLFW_KEY_W and action == GLFW_PRESS:#todo usunąć
-        cube.moveW()
-        cube.loadParameters()
-    if key == GLFW_KEY_G and action == GLFW_PRESS:#todo usunąć
-        cube.moveG()
-        cube.loadParameters()
-    if key == GLFW_KEY_R and action == GLFW_PRESS:#todo usunąć
-        cube.moveR()
-        cube.loadParameters()
-    if key == GLFW_KEY_B and action == GLFW_PRESS:#todo usunąć
-        cube.moveB()
-        cube.loadParameters()
-    if key == GLFW_KEY_Y and action == GLFW_PRESS:#todo usunąć
-        cube.moveY()
-        cube.loadParameters()
-    if key == GLFW_KEY_O and action == GLFW_PRESS:#todo usunąć
-        cube.moveO()
-        cube.loadParameters()
-    if key == GLFW_KEY_X and action == GLFW_PRESS:#todo usunąć
+    if key == GLFW_KEY_W and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('W')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveW()
+            cube.loadParameters()
+
+    if key == GLFW_KEY_G and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('G')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveG()
+            cube.loadParameters()
+
+    if key == GLFW_KEY_R and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('R')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveR()
+            cube.loadParameters()
+
+    if key == GLFW_KEY_B and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('B')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveB()
+            cube.loadParameters()
+
+    if key == GLFW_KEY_Y and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('Y')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveY()
+            cube.loadParameters()
+
+    if key == GLFW_KEY_O and action == GLFW_PRESS: 
+        if settingManual:
+            cube.setNext('O')
+            if cube.isSet():
+                settingManual = False
+        else:
+            cube.moveO()
+            cube.loadParameters()
+
+
+    if key == GLFW_KEY_X and action == GLFW_PRESS: 
         cube.fullRotateX()
         cube.loadParameters()
-    if key == GLFW_KEY_Z and action == GLFW_PRESS:#todo usunąć
+
+    if key == GLFW_KEY_Z and action == GLFW_PRESS: 
         cube.fullRotateY()
         cube.loadParameters()
-    if key == GLFW_KEY_S and action == GLFW_PRESS:#todo usunąć
+
+
+
+    if key == GLFW_KEY_S and action == GLFW_PRESS: 
         cube.saveCube("example.txt")
-    if key == GLFW_KEY_L and action == GLFW_PRESS:#todo usunąć
+
+    if key == GLFW_KEY_L and action == GLFW_PRESS: 
         cube.readFromFile("example.txt")
-    if key == GLFW_KEY_ENTER and action == GLFW_PRESS:#todo usunąć
-        findSolution()
+        settingManual = False
+
+    if key == GLFW_KEY_ENTER and action == GLFW_PRESS: 
+        if not settingManual:
+            try:
+                findSolution()
+            except:
+                print("Wrong Cube setting")
+
+    if key == GLFW_KEY_1 and action == GLFW_PRESS: 
+        cube.reset()
+        settingManual = True
         
-    if key == GLFW_KEY_SPACE and action == GLFW_PRESS:#todo usunąć
+    if key == GLFW_KEY_SPACE and action == GLFW_PRESS: 
         global solvingMoveIndex, translatedSolution, showingSolution, startRotationTime
         if len(translatedSolution) != 0 :
 
@@ -82,8 +136,10 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if (key == GLFW_KEY_UP or key == GLFW_KEY_DOWN) and action == GLFW_RELEASE:
         viewerMoveVector[1] = 0
 
-def findSolution(): #todo do sth with it
+def findSolution():
     global translatedSolution, showingSolution, startRotationTime
+
+    cube.setPos()
 
     if cube.isSolved():
         print("solved")
@@ -127,16 +183,6 @@ def findSolution(): #todo do sth with it
 
     showingSolution = True
 
-
-    # for move in translatedSolution:
-    #     move(cube)
-    #     cube.loadParameters()
-    #     render()
-    #     # time.sleep(1)
-
-
-
-    # print(translatedSolution)
 
 
 def update_viewport(window, width, height):
@@ -284,12 +330,11 @@ display = (1000, 800)
 
 # parametru kamery
 viewerAngles = [pi / 180 * 90, 0, 3]
-viewer = [0.0, 0.0, 3.0]
+viewer = [1, -1, 3]
 viewerMoveVector = [0, 0, 1]  # x, y, zoom
 viewerSpeed = pi / 180 * 0.5
 
-cube = Cube()
-solution = [] #todo delete
+solution = []
 
 solvingMoveIndex = 0
 translatedSolution = []
@@ -297,6 +342,8 @@ translatedSolution = []
 showingSolution = False
 startRotationTime = -1
 rotationTime = 1
+
+settingManual = False
 
 if __name__ == "__main__":
     main()

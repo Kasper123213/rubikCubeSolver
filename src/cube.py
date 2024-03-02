@@ -6,6 +6,7 @@ from OpenGL.GLU import *
 from OpenGL.raw.GLU import gluCylinder, gluDisk, gluQuadricTexture
 
 class Cube:
+    currentSet = None
 
     currentRotation = None
     rotatedSurfaces = []
@@ -27,19 +28,6 @@ class Cube:
     ]
 
     quadric = gluNewQuadric()
-    # def setCube(self):
-    #     colorsMap = {0:'W', 1:'G', 2:'R', 3:'B', 4:'Y', 5:'O'}
-    #     for surface in range(6):
-    #         row = []
-    #         for r in range(3):
-    #             col = []
-    #             for c in range(3):
-    #                 col.append(Surface(colorsMap.get(surface)))
-    #             row.append(col)
-    #         self.surfaces.append(row)
-
-
-
 
     def createSurfaces(self):
         self.surfaces = [
@@ -117,13 +105,6 @@ class Cube:
         self.rotateSurface(0, False)
 
         self.currentRotation = 'W'
-    # def moveW2(self):
-    #     self.moveW()
-    #     self.moveW()
-    # def moveW3(self):
-    #     self.moveW()
-    #     self.moveW()
-    #     self.moveW()
 
     #rotate around green center
     def moveG(self):
@@ -133,13 +114,6 @@ class Cube:
         self.rotateSurface(1, False)
 
         self.currentRotation = 'G'
-    # def moveG2(self):
-    #     self.moveG()
-    #     self.moveG()
-    # def moveG3(self):
-    #     self.moveG()
-    #     self.moveG()
-    #     self.moveG()
 
 
     #rotate around red center
@@ -150,13 +124,6 @@ class Cube:
         self.rotateSurface(2, False)
 
         self.currentRotation = 'R'
-    # def moveR2(self):
-    #     self.moveR()
-    #     self.moveR()
-    # def moveR3(self):
-    #     self.moveR()
-    #     self.moveR()
-    #     self.moveR()
 
 
     # rotate around blue center
@@ -167,13 +134,6 @@ class Cube:
         self.rotateSurface(3, False)
 
         self.currentRotation = 'B'
-    # def moveB2(self):
-    #     self.moveB()
-    #     self.moveB()
-    # def moveB3(self):
-    #     self.moveB()
-    #     self.moveB()
-    #     self.moveB()
 
 
     #rotate around yellow center
@@ -184,13 +144,6 @@ class Cube:
         self.rotateSurface(4, False)
 
         self.currentRotation = 'Y'
-    # def moveY2(self):
-    #     self.moveY()
-    #     self.moveY()
-    # def moveY3(self):
-    #     self.moveY()
-    #     self.moveY()
-    #     self.moveY()
 
 
     # rotate around orange center
@@ -202,13 +155,6 @@ class Cube:
         self.rotateSurface(5, False)
 
         self.currentRotation = 'O'
-    # def moveO2(self):
-    #     self.moveO()
-    #     self.moveO()
-    # def moveO3(self):
-    #     self.moveO()
-    #     self.moveO()
-    #     self.moveO()
 
 
 
@@ -247,15 +193,11 @@ class Cube:
         for surface in range(6):
             for row in range(3):
                 for col in range(3):
-                    # angle = (30,0, 0, 1) #1,0,0 w gore 0,1,0 w lewo 0,0,1 przeciwnie do rucchu wskazowek
-                    # self.surfaces[surface][row][col].draw(self.quadric, angle)
-                    # continue
 
-                    if (surface, row, col) in self.rotatedSurfaces:
+                    if (surface, row, col) in self.rotatedSurfaces and self.currentRotation is not None:
                         angleVector = deepcopy(self.rotationDic.get(self.currentRotation))
                         angleVector[0] *= angle
                         self.surfaces[surface][row][col].draw(self.quadric, angleVector)
-                        # print(angleVector)
                     else:
                         self.surfaces[surface][row][col].draw(self.quadric)
 
@@ -266,9 +208,7 @@ class Cube:
 
     def loadParameters(self):
         anglesMap = {0:(90, 1, 0, 0), 1:(90, 0, 1, 0), 2:(0, 0, 1, 0), 3:(90, 0, 1, 0), 4:(90, 1, 0, 0), 5:(0, 0, 1, 0),}
-        # self.surfaces[0][0][0].
-        # self.surfaces[0][0][0].setPos(0, 0, 0)
-        # self.surfaces[1][0][0].setPos(1, 0, 0)
+
 
         for surface in range(6):
             for row in range(3):
@@ -311,7 +251,6 @@ class Cube:
             'Y': 'D'
         }
 
-        # ['white', 'red', 'green', 'yellow', 'orange', 'blue']:
         state = ""
         for surface in (0, 2, 1, 4, 5, 3):
             for row in range(3):
@@ -336,3 +275,81 @@ class Cube:
                         return False
         return True
 
+    def reset(self):
+        for surface in range(6):
+            for row in range(3):
+                for col in range(3):
+                    self.cube[surface][row][col] = 'X'
+
+        self.cube[0][0][0] = 'S'
+        self.loadParameters()
+
+        self.currentSet = [0, 0, 0]
+
+    def setNext(self, color):
+        self.cube[self.currentSet[0]][self.currentSet[1]][self.currentSet[2]] = color
+
+
+        self.currentSet[2]+=1
+
+        if self.currentSet[2]>2:
+            self.currentSet[2] = 0
+            self.currentSet[1] += 1
+            if self.currentSet[1]>2:
+                self.currentSet[1] = 0
+                self.currentSet[0] += 1
+                if self.currentSet[0] > 5:
+                    self.currentSet = None
+                    return
+        self.cube[self.currentSet[0]][self.currentSet[1]][self.currentSet[2]] = 'S'
+
+        self.loadParameters()
+
+
+    def isSet(self):
+        if self.currentSet is None:
+            return True
+        else:
+            return False
+
+    def setPos(self):
+        if self.cube[0][1][1] != 'W':
+            if self.cube[1][1][1] == 'W':
+                self.fullRotateY()
+                self.fullRotateX()
+                self.fullRotateX()
+                self.fullRotateX()
+            elif self.cube[2][1][1] == 'W':
+                self.fullRotateX()
+            elif self.cube[3][1][1] == 'W':
+                self.fullRotateY()
+                self.fullRotateX()
+            elif self.cube[4][1][1] == 'W':
+                self.fullRotateX()
+                self.fullRotateX()
+            else:
+                self.fullRotateX()
+                self.fullRotateX()
+                self.fullRotateX()
+
+
+        if self.cube[1][1][1] != 'G':
+            if self.cube[0][1][1] == 'G':
+                self.fullRotateX()
+                self.fullRotateY()
+                self.fullRotateY()
+                self.fullRotateY()
+            elif self.cube[2][1][1] == 'G':
+                self.fullRotateY()
+            elif self.cube[3][1][1] == 'G':
+                self.fullRotateY()
+                self.fullRotateY()
+            elif self.cube[4][1][1] == 'G':
+                self.fullRotateX()
+                self.fullRotateY()
+            else:
+                self.fullRotateY()
+                self.fullRotateY()
+                self.fullRotateY()
+
+        self.loadParameters()
