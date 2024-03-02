@@ -1,4 +1,5 @@
 import time
+import os
 from copy import deepcopy
 from surface import Surface
 from OpenGL.GL import *
@@ -219,6 +220,7 @@ class Cube:
 
 
     def saveCube(self, filename = "./example.txt"):
+        filename = os.getcwd() + filename
         with open(filename, "w") as file:
             text = ""
             for s in range(6):
