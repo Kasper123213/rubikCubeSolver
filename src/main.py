@@ -17,8 +17,8 @@ def keyboard_key_callback(window, key, scancode, action, mods):
 
     if (key == GLFW_KEY_ESCAPE or key == GLFW_KEY_P or key == GLFW_KEY_Q) and action == GLFW_PRESS:
         glfwSetWindowShouldClose(window, GLFW_TRUE)
-
-
+        
+        
     if key == GLFW_KEY_RIGHT and action == GLFW_PRESS:
         viewerMoveVector[0] = 1
     if key == GLFW_KEY_LEFT and action == GLFW_PRESS:
@@ -91,7 +91,7 @@ def keyboard_key_callback(window, key, scancode, action, mods):
         cube.fullRotateY()
         cube.loadParameters()
 
-
+ 
 
     if key == GLFW_KEY_S and action == GLFW_PRESS: 
         cube.saveCube("example.txt")
@@ -307,6 +307,8 @@ def render(time):
 
 def main():
     # cube.readFromFile()
+    
+    print("Strzałki - obracanie kostką, wgbroy - rotacja ściany, xyz - rotacja lostki względem danej osi, s - zapisanie stanu kostki do pliku txt, l - wczytanie kostki z pliku, 1 - ręczne wprowadzanie kolorów, enter - rozwiązanie kostki kktok po kroku, spacja - następny krok")
 
 
     setup()
